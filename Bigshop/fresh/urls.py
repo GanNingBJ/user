@@ -1,13 +1,14 @@
 from django.conf.urls import url
-import views
-urlpatterns=[
-    url('^$',views.index),
-    url('^login/$',views.login),
-    url('^register/$',views.register),
-    url('^register2/$',views.register2),
-    url('^login2/$',views.login2),
-    url('^site/$',views.site),
-    url('^user_center_info.html/$',views.user_center_info),
-    url('^user/site/$',views.site),
+from . import views
 
+urlpatterns=[
+    url(r'^register/$',views.register),
+    url(r'^register_handle/$',views.register_handle),
+    url(r'^register_exist/$', views.register_exist),
+    url(r'^login/$', views.login),
+    url(r'^login_handle/$', views.login_handle),
+    url(r'^logout/$',views.logout),
+    url(r'^info/$', views.info),
+    url(r'^order(\d*)/$', views.order),
+    url(r'^site/$', views.site),
 ]

@@ -38,6 +38,7 @@ def list(request,tid,pindex,orderby):
     new_list=gtype.goodsinfo_set.order_by('-id')[0:2]
     #查询指定分类tid的商品
     goods_list=gtype.goodsinfo_set.all()
+    print goods_list
     #根据指定规则排序
     if orderby=='1':
         goods_list=goods_list.order_by('-id')
@@ -63,7 +64,31 @@ def detail(request,gid):
     goods=GoodsInfo.objects.get(pk=gid)
     goods.gclick=goods.gclick+1
     goods.save()
+    #当前商品goods对应的分类，最新的两个商品
     new_list=goods.gtype.goodsinfo_set.order_by('-id')[0:2]
-    context={'title':'商品详情','goods':goods,
-             'new_list':new_list}
-    return render(request,'df_goods/detail.html',context)
+    context={'title':'商品详细','goods':goods,'new_list':new_list}
+    response=render(request,'df_goods/detail.html',context)
+    # 最近浏览
+    liulan=request.COOKIES.get('liulan','')
+    if liulan=="":
+        response.set_cookie('liulan',gid)
+    else:
+        liulan_list=liulan.split(',')#['6','4','1','2','3','5']
+        if gid in liulan_list:#如果当前商品已经被浏览则删除
+            liulan_list.remove(gid)
+        #加到第一个
+        liulan_list.insert(0,gid)
+        #保证只有5个元素
+        if len(liulan_list)>5:
+            liulan_list.pop()
+        liulan2=','.join(liulan_list)
+        response.set_cookie('liulan',liulan2)
+    return response
+
+
+from haystack.views import SearchView
+class MySearchView(SearchView):
+    def extra_context(self):
+        extra = super(MySearchView, self).extra_context()
+        extra['title']=self.request.GET.get('q')
+        return extra

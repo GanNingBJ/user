@@ -41,6 +41,8 @@ INSTALLED_APPS = (
     'df_goods',
     'tinymce',
     'haystack',
+    'df_cart',
+    'df_order',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -52,6 +54,8 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'fresh.UrlMiddleware.url',
+
 )
 
 ROOT_URLCONF = 'Bigshop.urls'
